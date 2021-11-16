@@ -1,0 +1,2 @@
+C:\Users\teru_\Downloads\AT12B_Ou-main\AT12B_Ou-main\α版マップと視点(当たり判定まだ)\Debug\sample.exe
+C:\Users\teru_\Downloads\AT12B_Ou-main\AT12B_Ou-main\α版マップと視点(当たり判定まだ)\Debug\sample.pdb
