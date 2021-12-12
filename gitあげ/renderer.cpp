@@ -410,9 +410,9 @@ HRESULT InitRenderer(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	ZeroMemory( &samplerDesc, sizeof( samplerDesc ) );	 //POINT:一番近いテクセルの色をサンプリングする
 	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;//LINEAR:近傍平均を取ったテクセルの色をサンプリングする
 	//テクスチャのアドレッシングモードの設定			 //ANISOTROPIC:異方性フィルタ　3Dに対応したサンプリング
-	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;//WRAP：繰り返し
-	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;//MIRROR:鏡面繰り返し
-	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;//CLAMP:最後の色を繰り返す
+	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP; //WRAP：繰り返し
+	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP; //MIRROR:鏡面繰り返し
+	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP; //CLAMP:最後の色を繰り返す
 													   //BORDER:指定色を繰り返す
 													   //MIRROR_ONCE:鏡面一回
 	g_BorderColor = D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f);

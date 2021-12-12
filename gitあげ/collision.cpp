@@ -9,6 +9,7 @@
 #include "player.h"
 #include "enemy.h"
 #include "fade.h"
+#include "scene.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -30,15 +31,31 @@ bool CollisionBC(D3DXVECTOR2 pos1, D3DXVECTOR2 pos2, float size1, float size2);
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
-
+ENEMY* enemy;
 
 //=============================================================================
 // 当たり判定処理
 //=============================================================================
 void UpdateCollision(void)
 {
-	PLAYER *player = GetPlayer();		// プレイヤーのポインターを初期化
-	ENEMY  *enemy  = GetEnemy();		// エネミーのポインターを初期化
+	PLAYER *player = GetPlayer();	// プレイヤーのポインターを初期化
+	
+
+	// ステージ１
+	if (GetScene() == SCENE_GAME1)
+	{
+		enemy = GetEnemy();		// エネミーのポインターを初期化
+	}
+	// ステージ２
+	if (GetScene() == SCENE_GAME2)
+	{
+		enemy = GetEnemy2();	// エネミーのポインターを初期化
+	}
+	//ステージ3
+	if (GetScene() == SCENE_GAME3)
+	{
+		enemy = GetEnemy3();	// エネミーのポインターを初期化
+	}
 	
 	// 敵と操作キャラ(BB)
 	for (int i = 0; i < ENEMY_MAX; i++)
@@ -50,7 +67,7 @@ void UpdateCollision(void)
 		if (CollisionBC(player->pos, enemy[i].pos, player->size.y/2, enemy[i].h/2))
 		{
 			// 操作キャラクターは死に
-			SceneTransition(SCENE_RESULT);
+			SceneTransition(SCENE_LOSE);
 
 			// 敵キャラクターは倒される
 			enemy[i].use = false;

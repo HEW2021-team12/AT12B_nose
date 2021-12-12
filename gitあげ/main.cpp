@@ -14,6 +14,8 @@
 #include "scene.h"
 #include "fade.h"
 #include "sprite.h"
+#include "sound.h"
+#include "keyboard.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -173,6 +175,9 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 //=============================================================================
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	Keyboard_ProcessMessage(message, wParam, lParam);
+	//Mouse_ProcessMessage(message, wParam, lParam);
+
 	switch( message )
 	{
 	case WM_DESTROY:
@@ -205,9 +210,11 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 
 	// 入力処理の初期化
 	InitInput(hInstance, hWnd);
+	//Mouse_Initialize(hWnd);
+	Keyboard_Initialize();
 
 	// サウンド処理の初期化
-	//InitSound(hWnd);
+	InitSound(hWnd);
 
 	// フェード処理の初期化
 	InitFade();
@@ -238,8 +245,8 @@ void Uninit(void)
 	UninitTexture();
 
 	// サウンドの終了処理
-	//StopSoundAll();
-	//UninitSound();
+	StopSoundAll();
+	UninitSound();
 
 	// 入力の終了処理
 	UninitInput();

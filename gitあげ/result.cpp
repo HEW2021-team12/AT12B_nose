@@ -6,9 +6,11 @@
 //=============================================================================
 #include "result.h"
 #include "input.h"
+#include "keyboard.h"
 #include "texture.h"
 #include "sprite.h"
 #include "fade.h"
+#include "sound.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -23,15 +25,18 @@
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
-static int	g_TextureNo = 0;	// テクスチャ情報
-
+unsigned char g_CrearTexture = 0;	// テクスチャ情報
+unsigned char g_CrearBGM = 0;
 
 //=============================================================================
 // 初期化処理
 //=============================================================================
 HRESULT InitResult(void)
 {
-	g_TextureNo = LoadTexture("data/TEXTURE/result.png");
+	g_CrearTexture = LoadTexture("data/TEXTURE/clear.png");
+	g_CrearBGM = LoadSound("data/SE/win.wav");
+
+	PlaySound(g_CrearBGM, 255);
 
 	return S_OK;
 }
@@ -41,7 +46,7 @@ HRESULT InitResult(void)
 //=============================================================================
 void UninitResult(void)
 {
-
+	StopSoundAll();
 }
 
 //=============================================================================
@@ -49,7 +54,9 @@ void UninitResult(void)
 //=============================================================================
 void UpdateResult(void)
 {
-	if (GetKeyboardTrigger(DIK_RETURN) && GetFadeState() == FADE_NONE)
+	if (Keyboard_IsKeyDown(KK_ENTER) ||
+		IsButtonTriggered(0, XINPUT_GAMEPAD_B)
+		&& GetFadeState() == FADE_NONE)
 	{
 		SceneTransition(SCENE_TITLE);
 	}
@@ -61,5 +68,5 @@ void UpdateResult(void)
 void DrawResult(void)
 {
 	// １枚のポリゴンの頂点とテクスチャ座標を設定
-	DrawSpriteLeftTop(g_TextureNo, 0.0f, 0.0f, SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f, 0.0f, 1.0f, 1.0f);
+	DrawSpriteLeftTop(g_CrearTexture, 0.0f, 0.0f, SCREEN_WIDTH, SCREEN_HEIGHT, 0.0f, 0.0f, 1.0f, 1.0f);
 }

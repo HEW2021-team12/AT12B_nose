@@ -9,10 +9,12 @@
 
 #include "scene.h"
 #include "title.h"
+#include "select_scene.h"
 #include "game.h"
 #include "result.h"
 #include "fade.h"
-
+#include "sound.h"
+#include "game_over.h"
 
 /*------------------------------------------------------------------------------
    定数定義
@@ -49,12 +51,28 @@ void InitScene(SCENE index)
 		InitTitle();
 		break;
 
-	case SCENE_GAME:
+	case SCENE_SELECT:
+		InitSelect_Scene();
+		break;
+
+	case SCENE_GAME1:
 		InitGame();
+		break;
+
+	case SCENE_GAME2:
+		InitGame2();
+		break;
+
+	case SCENE_GAME3:
+		InitGame3();
 		break;
 
 	case SCENE_RESULT:
 		InitResult();
+		break;
+
+	case SCENE_LOSE:
+		InitGameOver();
 		break;
 	}
 }
@@ -73,12 +91,28 @@ void UninitScene(void)
 		UninitTitle();
 		break;
 
-	case SCENE_GAME:
+	case SCENE_SELECT:
+		UninitSelect_Scene();
+		break;
+
+	case SCENE_GAME1:
 		UninitGame();
+		break;
+
+	case SCENE_GAME2:
+		UninitGame2();
+		break;
+
+	case SCENE_GAME3:
+		UninitGame3();
 		break;
 
 	case SCENE_RESULT:
 		UninitResult();
+		break;
+
+	case SCENE_LOSE:
+		UninitGameOver();
 		break;
 	}
 }
@@ -97,16 +131,33 @@ void UpdateScene(void)
 		UpdateTitle();
 		break;
 
-	case SCENE_GAME:
+	case SCENE_SELECT:
+		UpdateSelect_Scene();
+		break;
+
+	case SCENE_GAME1:
 		UpdateGame();
+		break;
+
+	case SCENE_GAME2:
+		UpdateGame2();
+		break;
+
+	case SCENE_GAME3:
+		UpdateGame3();
 		break;
 
 	case SCENE_RESULT:
 		UpdateResult();
 		break;
+
+	case SCENE_LOSE:
+		UpdateGameOver();
+		break;
 	}
 
 	UpdateFade();
+	
 }
 
 /*------------------------------------------------------------------------------
@@ -123,12 +174,28 @@ void DrawScene(void)
 		DrawTitle();
 		break;
 
-	case SCENE_GAME:
+	case SCENE_SELECT:
+		DrawSelect_Scene();
+		break;
+
+	case SCENE_GAME1:
 		DrawGame();
+		break;
+
+	case SCENE_GAME2:
+		DrawGame2();
+		break;
+
+	case SCENE_GAME3:
+		DrawGame3();
 		break;
 
 	case SCENE_RESULT:
 		DrawResult();
+		break;
+
+	case SCENE_LOSE:
+		DrawGameOver();
 		break;
 	}
 
@@ -158,4 +225,9 @@ void CheckScene(void)
 		//遷移先シーンの初期化処理を行う
 		InitScene(g_SceneNextIndex);
 	}
+}
+
+SCENE GetScene(void)
+{
+	return g_SceneIndex;
 }
