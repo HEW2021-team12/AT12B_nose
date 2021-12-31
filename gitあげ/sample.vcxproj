@@ -140,16 +140,23 @@
     <ClCompile Include="map_1.cpp" />
     <ClCompile Include="map_2.cpp" />
     <ClCompile Include="map_3.cpp" />
+    <ClCompile Include="patrol_1.cpp" />
     <ClCompile Include="player.cpp" />
+    <ClCompile Include="razer_1.cpp" />
+    <ClCompile Include="razer_3.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="result.cpp" />
     <ClCompile Include="scene.cpp" />
     <ClCompile Include="select_scene.cpp" />
+    <ClCompile Include="slime_1.cpp" />
+    <ClCompile Include="slime_3.cpp" />
     <ClCompile Include="sound.cpp" />
     <ClCompile Include="sprite.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="timer.cpp" />
     <ClCompile Include="title.cpp" />
+    <ClCompile Include="transparent_enemy_1.cpp" />
+    <ClCompile Include="warp_1.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="collision.h" />
@@ -162,16 +169,21 @@
     <ClInclude Include="Keylogger.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="map.h" />
+    <ClInclude Include="patrol.h" />
     <ClInclude Include="player.h" />
+    <ClInclude Include="razer.h" />
     <ClInclude Include="renderer.h" />
     <ClInclude Include="result.h" />
     <ClInclude Include="scene.h" />
     <ClInclude Include="select_scene.h" />
+    <ClInclude Include="slime.h" />
     <ClInclude Include="sound.h" />
     <ClInclude Include="sprite.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="timer.h" />
     <ClInclude Include="title.h" />
+    <ClInclude Include="transparent_enemy.h" />
+    <ClInclude Include="warp.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

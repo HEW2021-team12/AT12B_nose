@@ -181,7 +181,7 @@ void ControlSelect(void)
 {
 	//左
 	if (Keyboard_IsKeyDown(KK_LEFT)
-	//	|| GetThumbLeftX(0) < -INPUT_ZONE
+		|| GetThumbLeftX(0) < -INPUT_ZONE
 		&& g_Interval)
 	{
 		g_Interval = false;
@@ -290,17 +290,6 @@ void StageSelect(void)
 			&& selectX + (selectY * YOKO) == STAGE_2)
 		{
 			SceneTransition(SCENE_GAME2);
-		}
-	}
-
-	// ステージ3
-	if (Keyboard_IsKeyDown(KK_ENTER)
-		|| IsButtonTriggered(0, XINPUT_GAMEPAD_B))
-	{
-		if (GetFadeState() == FADE_NONE
-			&& selectX + (selectY * YOKO) == STAGE_3)
-		{
-			SceneTransition(SCENE_GAME3);
 		}
 	}
 

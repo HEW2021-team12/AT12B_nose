@@ -17,7 +17,7 @@
 
 #define GAME_TIME_2			(60)
 
-#define GAME_TIME_3			(90)
+//#define GAME_TIME_3			(90)
 
 #define TIMER_SIZE_X		(40.0f)
 #define TIMER_SIZE_Y		(70.0f)
@@ -60,12 +60,7 @@ void InitTimer(void)
 	{
 		g_Gametime = GAME_TIME_2;
 	}
-
-	//ステージ3
-	if (GetScene() == SCENE_GAME3)
-	{
-		g_Gametime = GAME_TIME_3;
-	}
+	
 }
 
 //=============================================================================
@@ -75,7 +70,6 @@ void UninitTimer(void)
 {
 
 }
-
 
 void UpdateTimer(void)
 {
@@ -102,7 +96,7 @@ void DrawTimer(void)
 	D3DXCOLOR col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 
 	unsigned char m, s;
-	unsigned char time = g_Gametime;
+	short time = g_Gametime;
 
 	if (time < 0)
 	{

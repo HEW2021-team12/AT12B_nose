@@ -10,6 +10,10 @@
 #include "enemy.h"
 #include "fade.h"
 #include "scene.h"
+#include "slime.h"
+#include "razer.h"
+#include "transparent_enemy.h"
+#include "sound.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -32,6 +36,28 @@ bool CollisionBC(D3DXVECTOR2 pos1, D3DXVECTOR2 pos2, float size1, float size2);
 // グローバル変数
 //*****************************************************************************
 ENEMY* enemy;
+SLIME* slime;
+BABBLE** babble;
+RAZER* razer;
+ENEMY* transparent;
+
+unsigned char	g_Slime_SE = 0;
+unsigned char	g_Razer_SE = 0;
+
+bool			g_PenaltySlime;
+bool			g_PenaltyBabble;
+
+//=============================================================================
+// 初期化処理
+//=============================================================================
+void InitCollision(void)
+{
+	g_Slime_SE = LoadSound("data/SE/slime.wav");
+	g_Razer_SE = LoadSound("data/SE/razer.wav");
+
+	g_PenaltySlime = false;
+	g_PenaltyBabble = false;
+}
 
 //=============================================================================
 // 当たり判定処理
@@ -39,40 +65,130 @@ ENEMY* enemy;
 void UpdateCollision(void)
 {
 	PLAYER *player = GetPlayer();	// プレイヤーのポインターを初期化
+	int enemy_max = 0;
+	int slime_max = 0;
+	int babble_max = 0;
+	int razer_max = 0;
+	int transparent_max = 0;
 	
-
 	// ステージ１
 	if (GetScene() == SCENE_GAME1)
 	{
 		enemy = GetEnemy();		// エネミーのポインターを初期化
+		enemy_max = ENEMY_MAX;
+
+		slime = GetSlime();
+		slime_max = SLIME_MAX;
+
+		babble = GetBabble();
+		babble_max = BABBLE_MAX;
+
+		razer = GetRazer();
+		razer_max = RAZER_MAX;
+
+		transparent = GetTransparent();
+		transparent_max = TRANSPARENT_MAX;
+
+		// ステージ１判定まとめ
+		{
+			// 敵と操作キャラ(BB)
+			for (int i = 0; i < enemy_max; i++)
+			{
+				if (enemy[i].use == false)
+					continue;
+
+				if (CollisionBC(player->pos, enemy[i].pos, player->size.y / 2, enemy[i].h / 2))
+				{
+					// 操作キャラクターは敗北
+					SceneTransition(SCENE_LOSE);
+				}
+			}
+
+			// プレイヤーとスライム
+			for (int i = 0; i < slime_max; i++)
+			{
+				if (slime[i].use)
+				{
+					if (CollisionBB(player->pos, slime[i].pos, player->size, D3DXVECTOR2(slime[i].w, slime[i].h)))
+					{
+						player->penalty = true;
+
+						// サウンド再生
+						if (!g_PenaltySlime)
+						{
+							PlaySound(g_Slime_SE, 0);
+							g_PenaltySlime = true;
+						}
+					}
+					else
+					{
+						g_PenaltySlime = false;
+					}
+				}
+
+				// プレイヤーとバブル
+				for (int j = 0; j < babble_max; j++)
+				{
+					if (babble[i][j].use)
+					{
+						if (CollisionBB(player->pos, babble[i][j].pos, player->size, D3DXVECTOR2(babble[i][j].w, babble[i][j].h)))
+						{
+							player->penalty = true;
+
+							// サウンド再生
+							if (!g_PenaltyBabble)
+							{
+								PlaySound(g_Slime_SE, 0);
+								g_PenaltyBabble = true;
+							}
+						}
+						else
+						{
+							g_PenaltyBabble = false;
+						}
+					}
+				}
+			}
+
+			// プレイヤーとレーザー
+			for (int i = 0; i < razer_max; i++)
+			{
+				if (razer[i].use)
+				{
+					if (CollisionBB(player->pos, razer[i].pos, player->size, D3DXVECTOR2(razer[i].w, razer[i].h)))
+					{
+						player->penalty = true;
+
+						// サウンド再生
+						PlaySound(g_Razer_SE, 0);
+					}
+				}
+			}
+
+			// プレイヤーとエネミー(透明)
+			for (int i = 0; i < transparent_max; i++)
+			{
+				if (transparent[i].use)
+				{
+					if (CollisionBB(player->pos, transparent[i].pos, player->size, D3DXVECTOR2(transparent[i].w, transparent[i].h)))
+					{
+						// 操作キャラクターは敗北
+						SceneTransition(SCENE_LOSE);
+					}
+				}
+			}
+		}
 	}
+
 	// ステージ２
 	if (GetScene() == SCENE_GAME2)
 	{
 		enemy = GetEnemy2();	// エネミーのポインターを初期化
-	}
-	//ステージ3
-	if (GetScene() == SCENE_GAME3)
-	{
-		enemy = GetEnemy3();	// エネミーのポインターを初期化
-	}
-	
-	// 敵と操作キャラ(BB)
-	for (int i = 0; i < ENEMY_MAX; i++)
-	{
-		if (enemy[i].use == false)
-			continue;
+		enemy_max = ENEMY_MAX2;
 
-//		if (CollisionBB(player->pos, enemy[i].pos, player->size, D3DXVECTOR2(enemy[i].w, enemy[i].h)))
-		if (CollisionBC(player->pos, enemy[i].pos, player->size.y/2, enemy[i].h/2))
+		// ステージ２判定まとめ
 		{
-			// 操作キャラクターは死に
-			SceneTransition(SCENE_LOSE);
-
-			// 敵キャラクターは倒される
-			enemy[i].use = false;
-
-			// HP減少処理
+			// ここに１のようにまとめておくように
 
 		}
 	}

@@ -15,10 +15,13 @@
 #include "player.h"
 #include "collision.h"
 #include "enemy.h"
-//#include "gas_gauge.h"
 #include "map.h"
 #include "sound.h"
 #include "timer.h"
+#include "slime.h"
+#include "razer.h"
+#include "warp.h"
+#include "transparent_enemy.h"
 
 /*------------------------------------------------------------------------------
    ’è”’è‹`
@@ -77,8 +80,9 @@ void UpdateGame3(void)
 	UpdateMap3();
 	UpdateEnemy3();
 	UpdatePlayer();
-	//UpdateGasGauge();
-
+	UpdateRazer3();
+	UpdateSlime3();
+	
 	UpdateCollision();
 	UpdateTimer();
 

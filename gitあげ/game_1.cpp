@@ -18,6 +18,10 @@
 #include "map.h"
 #include "sound.h"
 #include "timer.h"
+#include "slime.h"
+#include "razer.h"
+#include "warp.h"
+#include "transparent_enemy.h"
 
 /*------------------------------------------------------------------------------
    定数定義
@@ -45,8 +49,13 @@ void InitGame(void)
 {
 	InitPlayer();
 	InitEnemy();
+	InitTransparent();
+	InitSlime();
+	InitRazer();
+	InitWarp();
 	InitMap();
 	InitTimer();
+	InitCollision();		// サウンド追加用
 
 	g_BGMNo = LoadSound("data/BGM/BGM.wav");
 	PlaySound(g_BGMNo, 255);
@@ -62,7 +71,11 @@ void UninitGame()
 	//初期化とは逆順に終了処理を行う
 	UninitMap();
 	UninitPlayer();
-	UninitEnemy();
+	UninitTransparent();
+	//UninitEnemy();
+	UninitSlime();
+	UninitWarp();
+	UninitRazer();
 	UninitTimer();
 }
 
@@ -73,6 +86,10 @@ void UpdateGame(void)
 {
 	UpdateMap();
 	UpdateEnemy();
+	UpdateTransparent();
+	UpdateSlime();
+	UpdateRazer();
+	UpdateWarp();
 	UpdatePlayer();
 	
 	UpdateCollision();
@@ -94,7 +111,11 @@ void UpdateGame(void)
 void DrawGame(void)
 {
 	DrawMap();
+	DrawWarp();
 	DrawPlayer();
 	DrawEnemy();
+	DrawTransparent();
+	DrawSlime();
+	DrawRazer();
 	DrawTimer();
 }

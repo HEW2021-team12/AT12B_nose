@@ -30,7 +30,7 @@
 // プロトタイプ宣言
 //*****************************************************************************
 
-void SetEnemy2(void);
+void SetEnemy2(int i);
 void WatchEnemy2(int i);
 void NoneWatchEnemy2(int i);
 bool SerchPlayer2(D3DXVECTOR2 Playerpos, D3DXVECTOR2 Enemypos);
@@ -40,6 +40,7 @@ bool SerchPlayer2(D3DXVECTOR2 Playerpos, D3DXVECTOR2 Enemypos);
 //*****************************************************************************
 unsigned char	g_EnemyTexture2 = 0;
 unsigned char	g_watch_SE2 = 0;
+unsigned char	g_watch_lost_SE2 = 0;
 
 // メモリ確保用アドレス
 ENEMY* g_Enemy2;				  // エネミー構造体
@@ -51,6 +52,7 @@ HRESULT InitEnemy2(void)
 {
 	g_EnemyTexture2 = LoadTexture("data/TEXTURE/enemy.png");
 	g_watch_SE2 = LoadSound("data/SE/watch1.wav");
+	g_watch_lost_SE2 = LoadSound("data/SE/enemy_worp.wav");
 
 	// メモリ確保
 	g_Enemy2 = new ENEMY[ENEMY_MAX];
@@ -139,7 +141,7 @@ void UpdateEnemy2(void)
 				if (g_Enemy2[i].watch)
 				{
 					// 見失った時の処理（SE）
-
+					PlaySound(g_watch_lost_SE2, 0);
 				}
 
 				g_Enemy2[i].watch = false;
@@ -152,11 +154,11 @@ void UpdateEnemy2(void)
 	// エネミー追加
 	if (GetTimer() == 20)
 	{
-		g_Enemy2[1].use = true;
+		SetEnemy2(1);
 	}
 	if (GetTimer() == 10)
 	{
-		g_Enemy2[2].use = true;
+		SetEnemy2(2);
 	}
 }
 
@@ -211,16 +213,16 @@ ENEMY *GetEnemy2(void)
 //=============================================================================
 // 敵の発生処理
 //=============================================================================
-void SetEnemy2(void)
+void SetEnemy2(int i)
 {
-	for (int i = 0; i < ENEMY_MAX; i++)
+	// もし未使用のデータを探す
+	if (g_Enemy2[i].use == false)	// 未使用状態の敵データを見つける
 	{
-		// もし未使用のデータを探す
-		if (g_Enemy2[i].use == false)	// 未使用状態の敵データを見つける
-		{
-			g_Enemy2[i].use = true;		// 使用状態へ変更する
-			return;						// 敵をセットできたので終了する
-		}
+		g_Enemy2[i].use = true;		// 使用状態へ変更する
+
+		// 出現したときのSE
+
+		return;						// 敵をセットできたので終了する
 	}
 }
 

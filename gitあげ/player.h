@@ -36,6 +36,9 @@ struct PLAYER
 
 	// マップ用
 	D3DXVECTOR2 difference;
+
+	// ペナルティー用
+	bool penalty;
 };
 
 

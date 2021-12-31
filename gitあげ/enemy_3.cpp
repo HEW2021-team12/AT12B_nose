@@ -13,24 +13,22 @@
 #include <time.h>
 #include "sound.h"
 #include "timer.h"
+#include "patrol.h"
 
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define ROT_SPD				(0.05f)
-#define ENEMY_SPD			(2.0f)
+#define ENEMY_SPD			(1.4f)
 #define ENEMY_SIZE			(55.0f)
-#define MOVE_TIMER			(50)
-#define SERCH_RANGE			(250.0f)
+#define SERCH_RANGE			(220.0f)
 #define FIND_SPD			(2.0f)
-
-#define SEARCH_TIMER		(CHIP_SIZE / ENEMY_SPD)
+#define NONE_MOVE			(150.0f)
 
 //*****************************************************************************
 // プロトタイプ宣言
 //*****************************************************************************
 
-void SetEnemy3(void);
+void SetEnemy3(int i);
 void WatchEnemy3(int i);
 void NoneWatchEnemy3(int i);
 bool SerchPlayer3(D3DXVECTOR2 Playerpos, D3DXVECTOR2 Enemypos);
@@ -40,9 +38,12 @@ bool SerchPlayer3(D3DXVECTOR2 Playerpos, D3DXVECTOR2 Enemypos);
 //*****************************************************************************
 unsigned char	g_EnemyTexture3 = 0;
 unsigned char	g_watch_SE3 = 0;
+unsigned char	g_watch_lost_SE = 0;
 
 // メモリ確保用アドレス
-ENEMY* g_Enemy3;				  // エネミー構造体
+ENEMY* g_Enemy3;		  // エネミー構造体
+char* g_RouteX3;		  // 巡回ルート用
+char* g_RouteY3;		  // 巡回ルート用
 
 //=============================================================================
 // 初期化処理
@@ -51,9 +52,13 @@ HRESULT InitEnemy3(void)
 {
 	g_EnemyTexture3 = LoadTexture("data/TEXTURE/enemy.png");
 	g_watch_SE3 = LoadSound("data/SE/watch1.wav");
+	g_watch_lost_SE = LoadSound("data/SE/enemy_worp.wav");
 
 	// メモリ確保
 	g_Enemy3 = new ENEMY[ENEMY_MAX];
+
+	g_RouteX3 = new char[ROOT_MAX];
+	g_RouteY3 = new char[ROOT_MAX];
 
 	// エネミー構造体の初期化
 	for (int i = 0; i < ENEMY_MAX; i++)
@@ -64,13 +69,15 @@ HRESULT InitEnemy3(void)
 			g_Enemy3[i].use = true;
 			g_Enemy3[i].pos.x = (CHIP_SIZE / 2) + CHIP_SIZE * 5;
 			g_Enemy3[i].pos.y = (CHIP_SIZE / 2) + CHIP_SIZE * 16;
+			g_Enemy3[i].routenom = 3;
 		}
 		// 二体目
 		if (i == 1)
 		{
 			g_Enemy3[i].use = false;
-			g_Enemy3[i].pos.x = (CHIP_SIZE / 2) + CHIP_SIZE * 4;
-			g_Enemy3[i].pos.y = (CHIP_SIZE / 2) + CHIP_SIZE * 7;
+			g_Enemy3[i].pos.x = (CHIP_SIZE / 2) + CHIP_SIZE * 3;
+			g_Enemy3[i].pos.y = (CHIP_SIZE / 2) + CHIP_SIZE * 9;
+			g_Enemy3[i].routenom = 0;
 		}
 		// 三体目
 		if (i == 2)
@@ -78,6 +85,7 @@ HRESULT InitEnemy3(void)
 			g_Enemy3[i].use = false;
 			g_Enemy3[i].pos.x = (CHIP_SIZE / 2) + CHIP_SIZE * 23;
 			g_Enemy3[i].pos.y = (CHIP_SIZE / 2) + CHIP_SIZE * 7;
+			g_Enemy3[i].routenom = 8;
 		}
 
 		// 共通
@@ -85,8 +93,6 @@ HRESULT InitEnemy3(void)
 		g_Enemy3[i].w = ENEMY_SIZE;
 		g_Enemy3[i].h = ENEMY_SIZE;
 		g_Enemy3[i].vel = D3DXVECTOR2(ENEMY_SPD, ENEMY_SPD);
-		g_Enemy3[i].timer = 0;
-		g_Enemy3[i].move = 0;
 		g_Enemy3[i].notmove = D3DXVECTOR2(0.0f, 0.0f);
 		g_Enemy3[i].addmove = D3DXVECTOR2(0.0f, 0.0f);
 		g_Enemy3[i].movecntX = false;
@@ -97,6 +103,14 @@ HRESULT InitEnemy3(void)
 		g_Enemy3[i].v = 0.0f;
 		g_Enemy3[i].uh = 0.5f;
 		g_Enemy3[i].vh = 0.5f;
+
+	}
+
+	// 巡回ルート設定
+	for (char r = 0; r < ROOT_MAX; r++)
+	{
+		g_RouteX3[r] = SetRouteX(r);
+		g_RouteY3[r] = SetRouteY(r);
 	}
 
 	return S_OK;
@@ -109,6 +123,8 @@ void UninitEnemy3(void)
 {
 	// メモリ解放
 	delete[] g_Enemy3;
+	delete[] g_RouteX3;
+	delete[] g_RouteY3;
 }
 
 //=============================================================================
@@ -139,25 +155,31 @@ void UpdateEnemy3(void)
 				if (g_Enemy3[i].watch)
 				{
 					// 見失った時の処理（SE）
+					PlaySound(g_watch_lost_SE, 0);
 
+					char work = rand() % ROOT_MAX;
+
+					g_Enemy3[i].routenom = work;
+					g_Enemy3[i].pos.x = SetRouteX(work) * CHIP_SIZE + (CHIP_SIZE / 2);
+					g_Enemy3[i].pos.y = SetRouteY(work) * CHIP_SIZE + (CHIP_SIZE / 2);
 				}
 
 				g_Enemy3[i].watch = false;
 
 				NoneWatchEnemy3(i);
-
 			}
 		}
 	}
 	// エネミー追加
 	if (GetTimer() == 20)
 	{
-		g_Enemy3[1].use = true;
+		SetEnemy3(1);
 	}
 	if (GetTimer() == 10)
 	{
-		g_Enemy3[2].use = true;
+		SetEnemy3(2);
 	}
+
 }
 
 //=============================================================================
@@ -201,26 +223,18 @@ void DrawEnemy3(void)
 }
 
 //=============================================================================
-// エネミー構造体の先頭アドレスを取得
-//=============================================================================
-ENEMY* GetEnemy3(void)
-{
-	return &g_Enemy3[0];
-}
-
-//=============================================================================
 // 敵の発生処理
 //=============================================================================
-void SetEnemy3(void)
+void SetEnemy3(int i)
 {
-	for (int i = 0; i < ENEMY_MAX; i++)
+	// もし未使用のデータを探す
+	if (g_Enemy3[i].use == false)	// 未使用状態の敵データを見つける
 	{
-		// もし未使用のデータを探す
-		if (g_Enemy3[i].use == false)	// 未使用状態の敵データを見つける
-		{
-			g_Enemy3[i].use = true;		// 使用状態へ変更する
-			return;						// 敵をセットできたので終了する
-		}
+		g_Enemy3[i].use = true;		// 使用状態へ変更する
+
+		// 出現したときのSE
+
+		return;						// 敵をセットできたので終了する
 	}
 }
 
@@ -304,7 +318,7 @@ void WatchEnemy3(int i)
 			if (!g_Enemy3[i].movecntX)
 			{
 				// 一定時間動けない（障害物に引っかかる）
-				if (g_Enemy3[i].notmove.x > CHIP_SIZE)
+				if (g_Enemy3[i].notmove.x > NONE_MOVE)
 				{
 					g_Enemy3[i].movecntX = true;
 					g_Enemy3[i].notmove.x = 0.0f;
@@ -322,7 +336,7 @@ void WatchEnemy3(int i)
 			if (!g_Enemy3[i].movecntY)
 			{
 				// 一定時間動けない（障害物に引っかかる）
-				if (g_Enemy3[i].notmove.y > CHIP_SIZE)
+				if (g_Enemy3[i].notmove.y > NONE_MOVE)
 				{
 					g_Enemy3[i].movecntY = true;
 					g_Enemy3[i].notmove.y = 0.0f;
@@ -334,39 +348,29 @@ void WatchEnemy3(int i)
 		// 一定時間動けない（障害物に引っかかる）
 		if (g_Enemy3[i].movecntX)
 		{
-			g_Enemy3[i].addmove.y += ENEMY_SPD;
+			g_Enemy3[i].movecntX = false;
 
-			g_Enemy3[i].pos.y += ENEMY_SPD;
-			if (GetMapEnter3(D3DXVECTOR2(g_Enemy3[i].pos.x, g_Enemy3[i].pos.y + ENEMY_SPD))
-				== 1)
-			{
-				g_Enemy3[i].pos.y -= ENEMY_SPD;
-			}
+			// 見失った時の処理（SE）
+			PlaySound(g_watch_lost_SE, 0);
 
-			// STOP_CNT分移動したら
-			if (g_Enemy3[i].addmove.y > CHIP_SIZE * 3 / 2)
-			{
-				g_Enemy3[i].movecntX = false;
-				g_Enemy3[i].addmove.y = 0.0f;
-			}
+			char work = rand() % ROOT_MAX;
+
+			g_Enemy3[i].routenom = work;
+			g_Enemy3[i].pos.x = SetRouteX(work) * CHIP_SIZE + (CHIP_SIZE / 2);
+			g_Enemy3[i].pos.y = SetRouteY(work) * CHIP_SIZE + (CHIP_SIZE / 2);
 		}
 		if (g_Enemy3[i].movecntY)
 		{
-			g_Enemy3[i].addmove.x += ENEMY_SPD;
+			g_Enemy3[i].movecntY = false;
 
-			g_Enemy3[i].pos.x += ENEMY_SPD;
-			if (GetMapEnter3(D3DXVECTOR2(g_Enemy3[i].pos.x + ENEMY_SPD, g_Enemy3[i].pos.y))
-				== 1)
-			{
-				g_Enemy3[i].pos.x -= ENEMY_SPD;
-			}
+			// 見失った時の処理（SE）
+			PlaySound(g_watch_lost_SE, 0);
 
-			// STOP_CNT分移動したら
-			if (g_Enemy3[i].addmove.x > CHIP_SIZE * 3 / 2)
-			{
-				g_Enemy3[i].movecntY = false;
-				g_Enemy3[i].addmove.x = 0.0f;
-			}
+			char work = rand() % ROOT_MAX;
+
+			g_Enemy3[i].routenom = work;
+			g_Enemy3[i].pos.x = SetRouteX(work) * CHIP_SIZE + (CHIP_SIZE / 2);
+			g_Enemy3[i].pos.y = SetRouteY(work) * CHIP_SIZE + (CHIP_SIZE / 2);
 		}
 
 	}
@@ -376,81 +380,112 @@ void WatchEnemy3(int i)
 // 見つけていなかったら
 void NoneWatchEnemy3(int i)
 {
-	g_Enemy3[i].timer++;
-
-	if (g_Enemy3[i].timer > MOVE_TIMER)
 	{
-		g_Enemy3[i].move = rand() % 5;
-		g_Enemy3[i].timer = 0;
-		srand((unsigned)time(NULL));
-	}
+		//現在位置
+		D3DXVECTOR2 position = g_Enemy3[i].pos;
 
-	// エネミー移動
-	// 1:上　2:下　3:右　4:左　0:なし(待機)
-	if (g_Enemy3[i].move == 1) // 上
-	{
-		g_Enemy3[i].pos.y -= g_Enemy3[i].vel.y;
-		if (GetMapEnter3(D3DXVECTOR2(g_Enemy3[i].pos.x, g_Enemy3[i].pos.y - g_Enemy3[i].vel.y))
-			== 1)
+		char work = g_Enemy3[i].routenom;
+
+		if (g_Enemy3[i].pos.x < g_RouteX3[work] * CHIP_SIZE + CHIP_SIZE &&
+			g_Enemy3[i].pos.x > g_RouteX3[work] * CHIP_SIZE)
 		{
-			g_Enemy3[i].pos.y += g_Enemy3[i].vel.y;
-		}
-		g_Enemy3[i].u = 0.5f;
-		g_Enemy3[i].v = 0.5f;
-		g_Enemy3[i].uh = 0.5f;
-		g_Enemy3[i].vh = 0.5f;
-	}
+			if (g_Enemy3[i].pos.y < g_RouteY3[work] * CHIP_SIZE + CHIP_SIZE &&
+				g_Enemy3[i].pos.y > g_RouteY3[work] * CHIP_SIZE)
+			{
+				if (i % 2 == 0)
+				{
+					// 偶数 or 0
+					work++;
+					g_Enemy3[i].routenom++;
+					if (work >= ROOT_MAX)
+					{
+						work = 0;
+						g_Enemy3[i].routenom = 0;
+					}
+				}
+				else
+				{
+					// 奇数
+					work--;
+					g_Enemy3[i].routenom--;
+					if (work < 0)
+					{
+						work = ROOT_MAX;
+						g_Enemy3[i].routenom = ROOT_MAX;
+					}
+				}
 
-	if (g_Enemy3[i].move == 2) // 下
-	{
-		g_Enemy3[i].pos.y += g_Enemy3[i].vel.y;
-		if (GetMapEnter3(D3DXVECTOR2(g_Enemy3[i].pos.x, g_Enemy3[i].pos.y + g_Enemy3[i].vel.y))
-			== 1)
+
+			}
+		}
+
+		//目標地点
+		D3DXVECTOR2 destination = D3DXVECTOR2(g_RouteX3[work] * CHIP_SIZE + (CHIP_SIZE / 2),
+			g_RouteY3[work] * CHIP_SIZE + (CHIP_SIZE / 2));
+
+		//成分
+		D3DXVECTOR2 components;
+
+		//大きさ
+		float magnitude;
+
+		//方向（単位ベクトル）
+		D3DXVECTOR2 direction;
+
+		//成分計算
+		components.x = destination.x - position.x;
+		components.y = destination.y - position.y;
+
+		//大きさ計算
+		magnitude = (float)sqrt(components.x * components.x + components.y * components.y);
+
+		//方向計算（正規化）
+		direction.x = components.x / magnitude;
+		direction.y = components.y / magnitude;
+
+		// 横の移動量の方が大きいとき
+		if (fabsf(direction.x) > fabsf(direction.y))
 		{
-			g_Enemy3[i].pos.y -= g_Enemy3[i].vel.y;
+			// 左に行くとき
+			if (direction.x < 0)
+			{
+				g_Enemy3[i].u = 1.0f;
+				g_Enemy3[i].v = 0.0f;
+				g_Enemy3[i].uh = -0.5f;
+				g_Enemy3[i].vh = 0.5f;
+			}
+			else // 右に行くとき
+			{
+				g_Enemy3[i].u = 0.5f;
+				g_Enemy3[i].v = 0.0f;
+				g_Enemy3[i].uh = 0.5f;
+				g_Enemy3[i].vh = 0.5f;
+			}
 		}
-		g_Enemy3[i].u = 0.0f;
-		g_Enemy3[i].v = 0.5f;
-		g_Enemy3[i].uh = 0.5f;
-		g_Enemy3[i].vh = 0.5f;
-	}
-
-	if (g_Enemy3[i].move == 3) // 右
-	{
-		g_Enemy3[i].pos.x += g_Enemy3[i].vel.x;
-		if (GetMapEnter3(D3DXVECTOR2(g_Enemy3[i].pos.x + g_Enemy3[i].vel.x, g_Enemy3[i].pos.y))
-			== 1)
+		else // 縦の移動量の方が大きい or 同じとき
 		{
-			g_Enemy3[i].pos.x -= g_Enemy3[i].vel.x;
+			// 上に行くとき
+			if (direction.y < 0)
+			{
+				g_Enemy3[i].u = 0.5f;
+				g_Enemy3[i].v = 0.5f;
+				g_Enemy3[i].uh = 0.5f;
+				g_Enemy3[i].vh = 0.5f;
+			}
+			else // 下に行くとき
+			{
+				g_Enemy3[i].u = 0.0f;
+				g_Enemy3[i].v = 0.5f;
+				g_Enemy3[i].uh = 0.5f;
+				g_Enemy3[i].vh = 0.5f;
+			}
 		}
-		g_Enemy3[i].u = 0.5f;
-		g_Enemy3[i].v = 0.0f;
-		g_Enemy3[i].uh = 0.5f;
-		g_Enemy3[i].vh = 0.5f;
-	}
 
-	if (g_Enemy3[i].move == 4) // 左
-	{
-		g_Enemy3[i].pos.x -= g_Enemy3[i].vel.x;
-		if (GetMapEnter3(D3DXVECTOR2(g_Enemy3[i].pos.x - g_Enemy3[i].vel.x, g_Enemy3[i].pos.y))
-			== 1)
-		{
-			g_Enemy3[i].pos.x += g_Enemy3[i].vel.x;
-		}
-		g_Enemy3[i].u = 1.0f;
-		g_Enemy3[i].v = 0.0f;
-		g_Enemy3[i].uh = -0.5f;
-		g_Enemy3[i].vh = 0.5f;
-	}
+		//移動後の位置を計算
+		g_Enemy3[i].pos.x += direction.x * ENEMY_SPD;
+		g_Enemy3[i].pos.y += direction.y * ENEMY_SPD;
 
-	if (g_Enemy3[i].move == 0) // 待機
-	{
-		g_Enemy3[i].u = 0.0f;
-		g_Enemy3[i].v = 0.0f;
-		g_Enemy3[i].uh = 0.5f;
-		g_Enemy3[i].vh = 0.5f;
 	}
-
 }
 
 // 範囲内にプレイヤーが入り込んだら
@@ -477,4 +512,13 @@ bool SerchPlayer3(D3DXVECTOR2 Playerpos, D3DXVECTOR2 Enemypos)
 	}
 
 	return false;
+}
+
+
+//=============================================================================
+// エネミー構造体の先頭アドレスを取得
+//=============================================================================
+ENEMY* GetEnemy3(void)
+{
+	return &g_Enemy3[0];
 }

@@ -27,9 +27,9 @@
 #define	PLAYER_POS_X_2		(7)
 #define	PLAYER_POS_Y_2		(4)
 
-//ステージ3
-#define	PLAYER_POS_X_3		(7)
-#define	PLAYER_POS_Y_3		(7)
+//// ステージ３
+//#define	PLAYER_POS_X_3		(7)
+//#define	PLAYER_POS_Y_3		(4)
 
 //*****************************************************************************
 // プロトタイプ宣言
@@ -66,13 +66,13 @@ HRESULT InitPlayer(void)
 		g_Player.pos.x = (CHIP_SIZE / 2) + CHIP_SIZE * PLAYER_POS_X_2;
 		g_Player.pos.y = (CHIP_SIZE / 2) + CHIP_SIZE * PLAYER_POS_Y_2;
 	}
-	//ステージ3
-	if (GetScene() == SCENE_GAME3)
-	{
-		g_Player.pos.x = (CHIP_SIZE / 2) + CHIP_SIZE * PLAYER_POS_X_3;
-		g_Player.pos.y = (CHIP_SIZE / 2) + CHIP_SIZE * PLAYER_POS_Y_3;
-	}
-	
+	//// ステージ３
+	//if (GetScene() == SCENE_GAME3)
+	//{
+	//	g_Player.pos.x = (CHIP_SIZE / 2) + CHIP_SIZE * PLAYER_POS_X_3;
+	//	g_Player.pos.y = (CHIP_SIZE / 2) + CHIP_SIZE * PLAYER_POS_Y_3;
+	//}
+
 	g_Player.size.x = PLAYER_SIZE;
 	g_Player.size.y = PLAYER_SIZE;
 	g_Player.vel.x = 0.0f;
@@ -86,6 +86,8 @@ HRESULT InitPlayer(void)
 	gravity_timer = 0.0f;
 	g_Player.difference.x = 0.0f;
 	g_Player.difference.y = 0.0f;
+
+	g_Player.penalty = false;
 
 	return S_OK;
 }
@@ -103,11 +105,9 @@ void UninitPlayer(void)
 //=============================================================================
 void UpdatePlayer(void)
 {
-	
 	ZeroGravity();
 	ControlPlayer();
 	//FramePlayer();
-	
 }
 
 //=============================================================================
@@ -128,29 +128,18 @@ void DrawPlayer(void)
 
 void ControlPlayer(void)
 {
-	/*if(!Keyboard_IsKeyDown(KK_LEFT) 
-		&& !(GetThumbLeftX(0) < -INPUT_ZONE) && 
-		!Keyboard_IsKeyDown(KK_RIGHT) 
-		&& !(GetThumbLeftX(0) > INPUT_ZONE) &&
-		!Keyboard_IsKeyDown(KK_UP) 
-		&& !(GetThumbLeftY(0) > INPUT_ZONE) && 
-		!Keyboard_IsKeyDown(KK_DOWN)
-		&& !(GetThumbLeftY(0) < -INPUT_ZONE))
+	if (g_Player.penalty)
 	{
-		button_bool = true;
-	}
-	
-	if (button_bool)
-	{
-		button_timer += 1.0f;
-	}
-	else 
-	{
-		button_timer = 0.0f;
-	}*/
+		g_Player.pos.x += g_Player.vel.x / 2;
+		g_Player.pos.y += g_Player.vel.y / 2;
 
-	g_Player.pos.x += g_Player.vel.x;
-	g_Player.pos.y += g_Player.vel.y;
+		g_Player.penalty = false;
+	}
+	else
+	{
+		g_Player.pos.x += g_Player.vel.x;
+		g_Player.pos.y += g_Player.vel.y;
+	}
 
 	// 横の移動量の方が大きいとき
 	if (fabsf(g_Player.vel.x) > fabsf(g_Player.vel.y))
@@ -218,23 +207,6 @@ void ControlPlayer(void)
 		}
 		// Y軸の当たり判定
 		if (GetMapEnter2(D3DXVECTOR2(g_Player.pos.x, g_Player.pos.y + g_Player.vel.y))
-			== 1)
-		{
-			g_Player.pos.y -= g_Player.vel.y;
-		}
-	}
-
-	// マップ3の当たり判定
-	if (GetScene() == SCENE_GAME3)
-	{
-		// X軸の当たり判定
-		if (GetMapEnter3(D3DXVECTOR2(g_Player.pos.x + g_Player.vel.x, g_Player.pos.y))
-			== 1)
-		{
-			g_Player.pos.x -= g_Player.vel.x;
-		}
-		// Y軸の当たり判定
-		if (GetMapEnter3(D3DXVECTOR2(g_Player.pos.x, g_Player.pos.y + g_Player.vel.y))
 			== 1)
 		{
 			g_Player.pos.y -= g_Player.vel.y;

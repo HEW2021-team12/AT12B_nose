@@ -35,8 +35,8 @@ struct ENEMY
 	float					v;
 	float					uh;
 	float					vh;
+	char					routenom;	// 巡回ルート用
 };
-
 
 // AIの移動の状態
 enum MOVE_STATE
@@ -66,7 +66,7 @@ void UpdateEnemy2(void);
 void DrawEnemy2(void);
 ENEMY* GetEnemy2(void);
 
-//ステージ3
+// ステージ3
 HRESULT InitEnemy3(void);
 void UninitEnemy3(void);
 void UpdateEnemy3(void);

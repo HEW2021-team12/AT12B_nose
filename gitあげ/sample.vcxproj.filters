@@ -32,7 +32,7 @@
       <UniqueIdentifier>{32ec5f5f-8aaa-41d9-ad6d-f0b4e6ab6459}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\STAGE3">
-      <UniqueIdentifier>{68404804-22de-4c0c-9d21-9ab659377703}</UniqueIdentifier>
+      <UniqueIdentifier>{ea1524c9-3ebe-4f96-b522-1b5b0aa0b47a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -55,9 +55,6 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="sound.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="select_scene.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Keylogger.cpp">
@@ -105,6 +102,24 @@
     <ClCompile Include="title.cpp">
       <Filter>ソース ファイル\SCEAN</Filter>
     </ClCompile>
+    <ClCompile Include="select_scene.cpp">
+      <Filter>ソース ファイル\SCEAN</Filter>
+    </ClCompile>
+    <ClCompile Include="patrol_1.cpp">
+      <Filter>ソース ファイル\STAGE1</Filter>
+    </ClCompile>
+    <ClCompile Include="slime_1.cpp">
+      <Filter>ソース ファイル\STAGE1</Filter>
+    </ClCompile>
+    <ClCompile Include="razer_1.cpp">
+      <Filter>ソース ファイル\STAGE1</Filter>
+    </ClCompile>
+    <ClCompile Include="warp_1.cpp">
+      <Filter>ソース ファイル\STAGE1</Filter>
+    </ClCompile>
+    <ClCompile Include="transparent_enemy_1.cpp">
+      <Filter>ソース ファイル\STAGE1</Filter>
+    </ClCompile>
     <ClCompile Include="enemy_3.cpp">
       <Filter>ソース ファイル\STAGE3</Filter>
     </ClCompile>
@@ -112,6 +127,12 @@
       <Filter>ソース ファイル\STAGE3</Filter>
     </ClCompile>
     <ClCompile Include="map_3.cpp">
+      <Filter>ソース ファイル\STAGE3</Filter>
+    </ClCompile>
+    <ClCompile Include="slime_3.cpp">
+      <Filter>ソース ファイル\STAGE3</Filter>
+    </ClCompile>
+    <ClCompile Include="razer_3.cpp">
       <Filter>ソース ファイル\STAGE3</Filter>
     </ClCompile>
   </ItemGroup>
@@ -129,9 +150,6 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="input.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="scene.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Texture.h">
@@ -175,6 +193,24 @@
     </ClInclude>
     <ClInclude Include="result.h">
       <Filter>ヘッダー ファイル\SCEAN</Filter>
+    </ClInclude>
+    <ClInclude Include="scene.h">
+      <Filter>ヘッダー ファイル\SCEAN</Filter>
+    </ClInclude>
+    <ClInclude Include="patrol.h">
+      <Filter>ヘッダー ファイル\GAME</Filter>
+    </ClInclude>
+    <ClInclude Include="slime.h">
+      <Filter>ヘッダー ファイル\GAME</Filter>
+    </ClInclude>
+    <ClInclude Include="razer.h">
+      <Filter>ヘッダー ファイル\GAME</Filter>
+    </ClInclude>
+    <ClInclude Include="warp.h">
+      <Filter>ヘッダー ファイル\GAME</Filter>
+    </ClInclude>
+    <ClInclude Include="transparent_enemy.h">
+      <Filter>ヘッダー ファイル\GAME</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

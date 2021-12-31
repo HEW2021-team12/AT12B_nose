@@ -12,7 +12,7 @@ void UninitGame2(void);
 void UpdateGame2(void);
 void DrawGame2(void);
 
-//// ステージ３
+// ステージ３
 void InitGame3(void);
 void UninitGame3(void);
 void UpdateGame3(void);

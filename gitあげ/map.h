@@ -74,6 +74,7 @@ void ChangeUv3(void);
 
 int GetMapEnter3(D3DXVECTOR2 pos);
 
+
 //int GetMap(int x, int y);
 
 #endif //MAP_H_

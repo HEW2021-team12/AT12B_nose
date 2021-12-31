@@ -15,7 +15,6 @@
 #include "player.h"
 #include "collision.h"
 #include "enemy.h"
-//#include "gas_gauge.h"
 #include "map.h"
 #include "sound.h"
 #include "timer.h"
