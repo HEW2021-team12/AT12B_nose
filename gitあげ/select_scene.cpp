@@ -293,6 +293,17 @@ void StageSelect(void)
 		}
 	}
 
+	// ステージ3
+	if (Keyboard_IsKeyDown(KK_ENTER)
+		|| IsButtonTriggered(0, XINPUT_GAMEPAD_B))
+	{
+		if (GetFadeState() == FADE_NONE
+			&& selectX + (selectY * YOKO) == STAGE_3)
+		{
+			SceneTransition(SCENE_GAME3);
+		}
+	}
+
 	// タイトル遷移（今はしないように設定）
 	if (Keyboard_IsKeyDown(KK_ENTER)
 		|| IsButtonTriggered(0, XINPUT_GAMEPAD_B))

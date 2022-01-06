@@ -63,6 +63,10 @@ void InitScene(SCENE index)
 		InitGame2();
 		break;
 
+	case SCENE_GAME3:
+		InitGame3();
+		break;
+
 	case SCENE_RESULT:
 		InitResult();
 		break;
@@ -99,6 +103,10 @@ void UninitScene(void)
 		UninitGame2();
 		break;
 
+	case SCENE_GAME3:
+		UninitGame3();
+		break;
+
 	case SCENE_RESULT:
 		UninitResult();
 		break;
@@ -133,6 +141,10 @@ void UpdateScene(void)
 
 	case SCENE_GAME2:
 		UpdateGame2();
+		break;
+	
+	case SCENE_GAME3:
+		UpdateGame3();
 		break;
 
 	case SCENE_RESULT:
@@ -172,6 +184,10 @@ void DrawScene(void)
 
 	case SCENE_GAME2:
 		DrawGame2();
+		break;
+
+	case SCENE_GAME3:
+		DrawGame3();
 		break;
 
 	case SCENE_RESULT:

@@ -29,11 +29,11 @@
 #define RAZER_COUNT			(250)		// useがfalseになり続けるカウント
 #define RAZER_KEEP			(400)		// useがtrueになり続けるカウント
 
-#define RAZER_POS_X1		(13)
-#define RAZER_POS_Y1		(9)
+#define RAZER_POS_X1		(28)
+#define RAZER_POS_Y1		(6)
 
-#define RAZER_POS_X2		(3)
-#define RAZER_POS_Y2		(4)
+#define RAZER_POS_X2		(12)
+#define RAZER_POS_Y2		(10)
 
 //*****************************************************************************
 // プロトタイプ宣言
@@ -44,46 +44,46 @@
 // グローバル変数
 //*****************************************************************************
 
-unsigned char	g_RazerTexture = 0;
+unsigned char	g_RazerTexture3 = 0;
 
 // メモリ確保用アドレス
-RAZER* g_Razer;
+RAZER* g_Razer3;
 
 //=============================================================================
 // 初期化処理
 //=============================================================================
 HRESULT InitRazer3(void)
 {
-	g_RazerTexture = LoadTexture("data/TEXTURE/razer.png");
+	g_RazerTexture3 = LoadTexture("data/TEXTURE/razer.png");
 
 	// メモリ確保
-	g_Razer = new RAZER[RAZER_MAX];
+	g_Razer3 = new RAZER[RAZER3_MAX];
 
 	// レーザー構造体の初期化
-	for (int i = 0; i < RAZER_MAX; i++)
+	for (int i = 0; i < RAZER3_MAX; i++)
 	{
-		g_Razer[i].use = false;
-		g_Razer[i].w = RAZER_SIZEX;
-		g_Razer[i].h = RAZER_SIZEY;
+		g_Razer3[i].use = false;
+		g_Razer3[i].w = RAZER_SIZEX;
+		g_Razer3[i].h = RAZER_SIZEY;
 
-		g_Razer[i].u = 0.0f;
-		g_Razer[i].v = 0.0f;
-		g_Razer[i].uh = RAZER_U;
-		g_Razer[i].vh = RAZER_V;
+		g_Razer3[i].u = 0.0f;
+		g_Razer3[i].v = 0.0f;
+		g_Razer3[i].uh = RAZER_U;
+		g_Razer3[i].vh = RAZER_V;
 
-		g_Razer[i].setcount = 0;
+		g_Razer3[i].setcount = 0;
 
 		// 一つ目
 		if (i == 0)
 		{
-			g_Razer[i].pos.x = CHIP_SIZE * RAZER_POS_X1;
-			g_Razer[i].pos.y = CHIP_SIZE * RAZER_POS_Y1;
+			g_Razer3[i].pos.x = CHIP_SIZE * RAZER_POS_X1;
+			g_Razer3[i].pos.y = CHIP_SIZE * RAZER_POS_Y1;
 		}
 		// 二つ目
 		if (i == 1)
 		{
-			g_Razer[i].pos.x = CHIP_SIZE * RAZER_POS_X2;
-			g_Razer[i].pos.y = CHIP_SIZE * RAZER_POS_Y2;
+			g_Razer3[i].pos.x = CHIP_SIZE * RAZER_POS_X2;
+			g_Razer3[i].pos.y = CHIP_SIZE * RAZER_POS_Y2;
 		}
 	}
 
@@ -96,7 +96,7 @@ HRESULT InitRazer3(void)
 void UninitRazer3(void)
 {
 	// メモリ解放
-	delete[] g_Razer;
+	delete[] g_Razer3;
 }
 
 //=============================================================================
@@ -104,38 +104,38 @@ void UninitRazer3(void)
 //=============================================================================
 void UpdateRazer3(void)
 {
-	for (int i = 0; i < RAZER_MAX; i++)
+	for (int i = 0; i < RAZER3_MAX; i++)
 	{
-		if (g_Razer[i].use)
+		if (g_Razer3[i].use)
 		{
-			g_Razer[i].setcount++;
+			g_Razer3[i].setcount++;
 
-			if (g_Razer[i].setcount > RAZER_KEEP)
+			if (g_Razer3[i].setcount > RAZER_KEEP)
 			{
-				g_Razer[i].use = false;
-				g_Razer[i].setcount = 0;
+				g_Razer3[i].use = false;
+				g_Razer3[i].setcount = 0;
 			}
 		}
 		else
 		{
-			g_Razer[i].setcount++;
+			g_Razer3[i].setcount++;
 
-			if (g_Razer[i].setcount > RAZER_COUNT)
+			if (g_Razer3[i].setcount > RAZER_COUNT)
 			{
-				g_Razer[i].changecount = g_Razer[i].setcount - RAZER_COUNT;
+				g_Razer3[i].changecount = g_Razer3[i].setcount - RAZER_COUNT;
 
-				g_Razer[i].u = g_Razer[i].changecount * RAZER_U;
+				g_Razer3[i].u = g_Razer3[i].changecount * RAZER_U;
 
-				if (g_Razer[i].changecount >= RAZER_NUM)
+				if (g_Razer3[i].changecount >= RAZER_NUM)
 				{
-					g_Razer[i].changecount = 0;
-					g_Razer[i].setcount = 0;
-					g_Razer[i].use = true;
+					g_Razer3[i].changecount = 0;
+					g_Razer3[i].setcount = 0;
+					g_Razer3[i].use = true;
 				}
 			}
 			else
 			{
-				g_Razer[i].u = 0.0f;
+				g_Razer3[i].u = 0.0f;
 			}
 		}
 	}
@@ -149,36 +149,36 @@ void DrawRazer3(void)
 
 	PLAYER* player = GetPlayer();
 
-	for (int i = 0; i < RAZER_MAX; i++)
+	for (int i = 0; i < RAZER3_MAX; i++)
 	{
 		// 画面内に入っているか
-		if (fabsf(g_Razer[i].pos.x - player->pos.x) < (VIEW_SCREEN_WIDTH * CHIP_SIZE) &&
-			fabsf(g_Razer[i].pos.y - player->pos.y) < (VIEW_SCREEN_HEIGHT * CHIP_SIZE))
+		if (fabsf(g_Razer3[i].pos.x - player->pos.x) < (VIEW_SCREEN_WIDTH * CHIP_SIZE) &&
+			fabsf(g_Razer3[i].pos.y - player->pos.y) < (VIEW_SCREEN_HEIGHT * CHIP_SIZE))
 		{
 
 			//エネミーの位置やテクスチャー座標を反映
-			float px = SCREEN_WIDTH / 2 + player->difference.x + (g_Razer[i].pos.x - player->pos.x);	// エネミーの表示位置X
-			float py = SCREEN_HEIGHT / 2 + player->difference.y + (g_Razer[i].pos.y - player->pos.y);	// エネミーの表示位置Y
-			float pw = g_Razer[i].w;		// エネミーの表示幅
-			float ph = g_Razer[i].h;		// エネミーの表示高さ
+			float px = SCREEN_WIDTH / 2 + player->difference.x + (g_Razer3[i].pos.x - player->pos.x);	// エネミーの表示位置X
+			float py = SCREEN_HEIGHT / 2 + player->difference.y + (g_Razer3[i].pos.y - player->pos.y);	// エネミーの表示位置Y
+			float pw = g_Razer3[i].w;		// エネミーの表示幅
+			float ph = g_Razer3[i].h;		// エネミーの表示高さ
 			D3DXCOLOR col;
 
 			col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 
-			if (g_Razer[i].use)
+			if (g_Razer3[i].use)
 			{
 				// １枚のポリゴンの頂点とテクスチャ座標を設定
-				DrawSpriteColor(g_RazerTexture, px, py, pw, ph,
-					RAZER_U * (RAZER_NUM - 1), g_Razer[i].v,
-					g_Razer[i].uh, g_Razer[i].vh,
+				DrawSpriteColor(g_RazerTexture3, px, py, pw, ph,
+					RAZER_U * (RAZER_NUM - 1), g_Razer3[i].v,
+					g_Razer3[i].uh, g_Razer3[i].vh,
 					col);
 			}
 			else
 			{
 				// １枚のポリゴンの頂点とテクスチャ座標を設定
-				DrawSpriteColor(g_RazerTexture, px, py, pw, ph,
-					g_Razer[i].u, g_Razer[i].v,
-					g_Razer[i].uh, g_Razer[i].vh,
+				DrawSpriteColor(g_RazerTexture3, px, py, pw, ph,
+					g_Razer3[i].u, g_Razer3[i].v,
+					g_Razer3[i].uh, g_Razer3[i].vh,
 					col);
 			}
 		}
@@ -190,5 +190,5 @@ void DrawRazer3(void)
 //=============================================================================
 RAZER* GetRazer3(void)
 {
-	return g_Razer;
+	return g_Razer3;
 }

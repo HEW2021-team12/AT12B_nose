@@ -17,7 +17,7 @@
 
 #define GAME_TIME_2			(60)
 
-//#define GAME_TIME_3			(90)
+#define GAME_TIME_3			(180)
 
 #define TIMER_SIZE_X		(40.0f)
 #define TIMER_SIZE_Y		(70.0f)
@@ -61,6 +61,11 @@ void InitTimer(void)
 		g_Gametime = GAME_TIME_2;
 	}
 	
+	// ステージ3
+	if (GetScene() == SCENE_GAME3)
+	{
+		g_Gametime = GAME_TIME_3;
+	}
 }
 
 //=============================================================================

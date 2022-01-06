@@ -17,7 +17,11 @@
 #define ROOT_MAX2			()
 
 // ステージ３
-#define ROOT_MAX3			()
+#define ROOT_MAX3_1			(19)
+#define ROOT_MAX3_2			(19)
+#define ROOT_MAX3_3			(19)
+#define ROOT_MAX3_4			(19)
+#define ROOT_MAX3_5			(19)
 
 // ステージ４
 #define ROOT_MAX4			()
@@ -35,8 +39,8 @@ char SetRouteY(char number);
 //char SetRouteY(char number);
 //
 //// ステージ３
-//char SetRouteX(char number);
-//char SetRouteY(char number);
+char SetRouteX(char number);
+char SetRouteY(char number);
 //
 //// ステージ４
 //char SetRouteX(char number);

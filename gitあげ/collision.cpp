@@ -192,7 +192,116 @@ void UpdateCollision(void)
 
 		}
 	}
+
+	// ステージ3
+	if (GetScene() == SCENE_GAME3)
+	{
+		enemy = GetEnemy3();		// エネミーのポインターを初期化
+		enemy_max = ENEMY_MAX;
+
+		slime = GetSlime3();
+		slime_max = SLIME_MAX;
+
+		babble = GetBabble3();
+		babble_max = BABBLE_MAX;
+
+		razer = GetRazer3();
+		razer_max = RAZER_MAX;
+
+
+
+		// ステージ3判定まとめ
+		{
+			// 敵と操作キャラ(BB)
+			for (int i = 0; i < enemy_max; i++)
+			{
+				if (enemy[i].use == false)
+					continue;
+
+				if (CollisionBC(player->pos, enemy[i].pos, player->size.y / 2, enemy[i].h / 2))
+				{
+					// 操作キャラクターは敗北
+					SceneTransition(SCENE_LOSE);
+				}
+			}
+
+			// プレイヤーとスライム
+			for (int i = 0; i < slime_max; i++)
+			{
+				if (slime[i].use)
+				{
+					if (CollisionBB(player->pos, slime[i].pos, player->size, D3DXVECTOR2(slime[i].w, slime[i].h)))
+					{
+						player->penalty = true;
+
+						// サウンド再生
+						if (!g_PenaltySlime)
+						{
+							PlaySound(g_Slime_SE, 0);
+							g_PenaltySlime = true;
+						}
+					}
+					else
+					{
+						g_PenaltySlime = false;
+					}
+				}
+
+				// プレイヤーとバブル
+				for (int j = 0; j < babble_max; j++)
+				{
+					if (babble[i][j].use)
+					{
+						if (CollisionBB(player->pos, babble[i][j].pos, player->size, D3DXVECTOR2(babble[i][j].w, babble[i][j].h)))
+						{
+							player->penalty = true;
+
+							// サウンド再生
+							if (!g_PenaltyBabble)
+							{
+								PlaySound(g_Slime_SE, 0);
+								g_PenaltyBabble = true;
+							}
+						}
+						else
+						{
+							g_PenaltyBabble = false;
+						}
+					}
+				}
+			}
+
+			// プレイヤーとレーザー
+			for (int i = 0; i < razer_max; i++)
+			{
+				if (razer[i].use)
+				{
+					if (CollisionBB(player->pos, razer[i].pos, player->size, D3DXVECTOR2(razer[i].w, razer[i].h)))
+					{
+						player->penalty = true;
+
+						// サウンド再生
+						PlaySound(g_Razer_SE, 0);
+					}
+				}
+			}
+
+			// プレイヤーとエネミー(透明)
+			for (int i = 0; i < transparent_max; i++)
+			{
+				if (transparent[i].use)
+				{
+					if (CollisionBB(player->pos, transparent[i].pos, player->size, D3DXVECTOR2(transparent[i].w, transparent[i].h)))
+					{
+						// 操作キャラクターは敗北
+						SceneTransition(SCENE_LOSE);
+					}
+				}
+			}
+		}
+	}
 }
+
 
 //=============================================================================
 // BBによる当たり判定処理
