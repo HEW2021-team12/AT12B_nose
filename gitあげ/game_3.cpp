@@ -54,6 +54,7 @@ void InitGame3(void)
 	InitTimer();
 	InitRazer3();
 	InitSlime3();
+
 	g_BGMNo3 = LoadSound("data/BGM/BGM.wav");
 	PlaySound(g_BGMNo3, 255);
 
@@ -111,4 +112,6 @@ void DrawGame3(void)
 	DrawEnemy3();
 	//DrawGasGauge();
 	DrawTimer();
+	DrawSlime3();
+	DrawRazer3();
 }
