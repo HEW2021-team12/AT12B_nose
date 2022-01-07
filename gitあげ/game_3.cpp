@@ -52,9 +52,11 @@ void InitGame3(void)
 	InitMap3();
 	//InitGasGauge();
 	InitTimer();
-
+	InitRazer3();
+	InitSlime3();
 	g_BGMNo3 = LoadSound("data/BGM/BGM.wav");
 	PlaySound(g_BGMNo3, 255);
+
 }
 
 /*------------------------------------------------------------------------------
@@ -70,6 +72,9 @@ void UninitGame3(void)
 	UninitEnemy3();
 	//UninitGasGauge();
 	UninitTimer();
+	UninitRazer3();
+	UninitSlime3();
+
 }
 
 /*------------------------------------------------------------------------------

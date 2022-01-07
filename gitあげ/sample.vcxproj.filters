@@ -135,6 +135,9 @@
     <ClCompile Include="razer_3.cpp">
       <Filter>ソース ファイル\STAGE3</Filter>
     </ClCompile>
+    <ClCompile Include="patrol_3.cpp">
+      <Filter>ソース ファイル\STAGE3</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">

@@ -39,8 +39,20 @@ char SetRouteY(char number);
 //char SetRouteY(char number);
 //
 //// ステージ３
-char SetRouteX(char number);
-char SetRouteY(char number);
+char SetRoute3X_1(char number);
+char SetRoute3Y_1(char number);
+
+char SetRoute3X_2(char number);
+char SetRoute3Y_2(char number);
+
+char SetRoute3X_3(char number);
+char SetRoute3Y_3(char number);
+
+char SetRoute3X_4(char number);
+char SetRoute3Y_4(char number);
+
+char SetRoute3X_5(char number);
+char SetRoute3Y_5(char number);
 //
 //// ステージ４
 //char SetRouteX(char number);

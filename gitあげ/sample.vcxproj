@@ -141,6 +141,7 @@
     <ClCompile Include="map_2.cpp" />
     <ClCompile Include="map_3.cpp" />
     <ClCompile Include="patrol_1.cpp" />
+    <ClCompile Include="patrol_3.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="razer_1.cpp" />
     <ClCompile Include="razer_3.cpp" />
