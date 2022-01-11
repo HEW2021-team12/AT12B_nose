@@ -24,6 +24,11 @@
 #define FIND_SPD			(2.0f)
 #define NONE_MOVE			(150.0f)
 
+// 初期位置管理用
+#define ROOT_NUM			(2)
+#define ROOT_NUM2			(0)
+#define ROOT_NUM3			(8)
+
 //*****************************************************************************
 // プロトタイプ宣言
 //*****************************************************************************
@@ -248,11 +253,11 @@ void UpdateEnemy3(void)
 	}
 	if (GetTimer() == 20)
 	{
-		SetEnemy3(2);
+		SetEnemy3(3);
 	}
 	if (GetTimer() == 10)
 	{
-		SetEnemy3(2);
+		SetEnemy3(4);
 	}
 
 

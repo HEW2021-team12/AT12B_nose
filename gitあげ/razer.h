@@ -28,7 +28,7 @@
 #define RAZER2_MAX		(2)
 
 // ステージ３
-#define RAZER3_MAX		(2)
+#define RAZER3_MAX		(7)
 
 // ステージ４
 #define RAZER4_MAX		(2)

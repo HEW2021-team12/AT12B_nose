@@ -53,7 +53,7 @@ char* g_RouteSlimeY3;		  // 巡回ルート用
 HRESULT InitSlime3(void)
 {
 	g_SlimeTexture3 = LoadTexture("data/TEXTURE/slime.png");
-	g_BabbleTexture3 = LoadTexture("data/TEXTURE/tako.png");
+	//g_BabbleTexture3 = LoadTexture("data/TEXTURE/tako.png");
 
 	// メモリ確保
 	g_Slime3 = new SLIME[SLIME_MAX];

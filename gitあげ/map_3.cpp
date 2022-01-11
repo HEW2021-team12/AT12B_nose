@@ -81,7 +81,7 @@ unsigned char g_map_hitchk3[MAP3_Y][MAP3_X] =
 void InitMap3(void)
 {
 	g_Back3 = LoadTexture("data/TEXTURE/back.jpg");
-	g_MapTexture3 = LoadTexture("data/MAP/MAP3.png");
+	g_MapTexture3 = LoadTexture("data/MAP/MAP3.jpg");
 
 	// ƒƒ‚ƒŠŠm•Û
 	g_map3 = new MAP;
